@@ -1,29 +1,35 @@
-
 import requests
-import getpass
-import xml.etree.ElementTree as ET
-import pandas as pd
 import time
-import tkinter as tk
-from tkinter import messagebox
-
+import json
 
 
 requests.packages.urllib3.disable_warnings()
 
-url = 'https://webexapis.com/v1/admin/meeting/config/sessionTypes?siteUrl=tcmb.webex.com'
 
-headers = {'Content-type': 'application/json','Authorization': 'Bearer YjAzZWM3YTktZjYyMi00YTQwLTg0MGItMWI1Y2Y0NmYyMjA2ZjMyMjdmYjMtYzAz_PE93_2ee3365a-445e-48b9-ad49-28230675c153'}
+# Webex tarafına yapılacak istek için gerekli parametreler
+# Kullanıcıların bulunduğu sayfaya istek atılıyor
+url = 'https://webexapis.com/v1/people?max=1000'
+access_token = 'YjAzZWM3YTktZjYyMi00YTQwLTg0MGItMWI1Y2Y0NmYyMjA2ZjMyMjdmYjMtYzAz_PE93_2ee3365a-445e-48b9-ad49-28230675c153'
+headers = {'Content-type': 'application/json','Authorization': 'Bearer ' + access_token}
 
-#username = getpass. getuser() 
-#userName = input("Enter user name: ")
-#password = getpass.getpass()
-
-
-
+#Tüm kullanıcılar çekiliyor
 response = requests.get(url,verify=False,headers=headers)
-content = response.content
+response_json = response.json()
+response_items = response_json['items']
 
-print(content)
+#Kullanıcıların session type sayfasına erişim için gerekli URL
+user_session_type_url = 'https://webexapis.com/v1/admin/meeting/userconfig/sessionTypes'
 
-pip install --proxy http://kullanici_adi:sifre@proxy.tcmb.gov.tr:8080 --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org pyinstaller
+#Kullanıcı session type bilgisinin değiştirilmesi kısmı
+#Kullanıcı bilgisi olarak email parametresi kullanılıyor
+
+for item in response_items:
+   user_email = item['emails'][0]
+   body = {'siteUrl': 'tcmb.webex.com',
+        'email': user_email,
+        'sessionTypeIds': ["3"]
+        }
+   response = requests.put(user_session_type_url,verify=False,headers=headers,json=body)
+   print(user_email)
+ 
+
