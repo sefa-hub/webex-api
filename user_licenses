@@ -1,0 +1,30 @@
+import requests
+import time
+import json
+
+
+requests.packages.urllib3.disable_warnings()
+
+
+# Webex tarafına yapılacak istek için gerekli parametreler
+# Kullanıcıların bulunduğu sayfaya istek atılıyor
+url = 'https://webexapis.com/v1/people?max=1000'
+access_token = 'ACCESS_TOKEN'
+headers = {'Content-type': 'application/json','Authorization': 'Bearer ' + access_token}
+
+#Tüm kullanıcılar çekiliyor
+response = requests.get(url,verify=False,headers=headers)
+response_json = response.json()
+response_items = response_json['items']
+
+user_with_meeting_license = [[],[]]
+for item in response_items:
+    licenses = item['licenses']
+    for license in licenses:
+        if license == 'Y2lzY29zcGFyazovL3VzL0xJQ0VOU0UvMmVlMzM2NWEtNDQ1ZS00OGI5LWFkNDktMjgyMzA2NzVjMTUzOk1DXzc0YWI3ZDM1LWFjNGQtNDc3My1hMGRiLTgxODFlZjA5MGM0NV90Y21iLndlYmV4LmNvbQ':
+            print(item['displayName'] + " " + item['emails'][0])
+            userDisplayName = item['displayName']
+            userEmail = item['emails'][0]
+            user = [userDisplayName,userEmail]
+            user_with_meeting_license.append(user)
+
