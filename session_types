@@ -9,7 +9,7 @@ requests.packages.urllib3.disable_warnings()
 # Webex tarafına yapılacak istek için gerekli parametreler
 # Kullanıcıların bulunduğu sayfaya istek atılıyor
 url = 'https://webexapis.com/v1/people?max=1000'
-access_token = 'YjAzZWM3YTktZjYyMi00YTQwLTg0MGItMWI1Y2Y0NmYyMjA2ZjMyMjdmYjMtYzAz_PE93_2ee3365a-445e-48b9-ad49-28230675c153'
+access_token = 'ACCESS_TOKEN_YAZILACAK'
 headers = {'Content-type': 'application/json','Authorization': 'Bearer ' + access_token}
 
 #Tüm kullanıcılar çekiliyor
